@@ -130,7 +130,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/nogo/delivery/web/todo_list/generated/prisma",
+      "value": "/home/nogo/delivery/web/my_todolist/backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -144,12 +144,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/nogo/delivery/web/todo_list/prisma/schema.prisma",
+    "sourceFilePath": "/home/nogo/delivery/web/my_todolist/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.8.2",
@@ -158,6 +157,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {

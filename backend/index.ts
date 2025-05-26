@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { auth } from "./src/auth";
 import swagger from "@elysiajs/swagger";
 import { todo } from "./src/todo";
@@ -10,6 +10,8 @@ const app = new Elysia()
   .use(todo)
   .listen(3000);
 
+export type BackendApp = typeof app
+
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `My_ToDoList is running at ${app.server?.hostname}:${app.server?.port}`
 );
