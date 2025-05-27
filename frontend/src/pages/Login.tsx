@@ -3,7 +3,7 @@ import { treaty } from "@elysiajs/eden";
 import { useNavigate } from "react-router-dom";
 import type { BackendApp } from "../../../backend/index.ts";
 
-const client = treaty<BackendApp>("http://localhost:3000");
+export const client = treaty<BackendApp>("http://localhost:3000");
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);

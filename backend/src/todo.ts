@@ -3,7 +3,7 @@ import { authJWT } from "./auth";
 import { prisma } from "./prismaDb";
 import { TaskStatus } from "../generated/prisma";
 
-export const todo = new Elysia({ name: "todos", prefix: "auth" })
+export const todo = new Elysia({ name: "todos"})
   .use(authJWT)
   .get(
     "/todos",
@@ -13,7 +13,9 @@ export const todo = new Elysia({ name: "todos", prefix: "auth" })
       return await prisma.task.findMany({ where: { userId: value.id } });
     },
     {
-      body: t.String(),
+      headers: t.Object({
+        authorization: t.String(),
+      }),
     }
   )
   .post(

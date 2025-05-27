@@ -1,25 +1,44 @@
 import Task from "../components/task";
+import { treaty } from "@elysiajs/eden";
+import type { BackendApp } from "../../../backend/index.ts";
+import { client } from "./Login";
+import { useEffect, useState } from "react";
+import type { TaskStatus } from "../../../backend/generated/prisma";
 
 function Todo() {
+  const [, setTasks] = useState<
+    {
+      status: TaskStatus;
+      id: number;
+      userId: number;
+      taskName: string;
+      description: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = localStorage.getItem("token") || "";
+        const response = await client.todos.get({
+          headers: {
+            authorization: token,
+          },
+        });
+        if (response.data) {
+          console.log("Tasks received:", response.data);
+          setTasks(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    fetchTasks();
+  }, []);
   return (
-    <div className="flex flex-col items-center mt-8">
-      <h2 className="text-2xl font-bold mb-4">Exemple de tâche</h2>
-      <Task
-        taskName="Faire les courses"
-        taskDescription="Acheter du pain, du lait et des œufs."
-        taskStatus={0}
-      />
-      <Task
-        taskName="Coder un composant"
-        taskDescription="Créer un composant Task pour la todo list."
-        taskStatus={1}
-      />
-      <Task
-        taskName="Déployer l'application"
-        taskDescription="Mettre en ligne la version finale sur le serveur."
-        taskStatus={2}
-      />
-    </div>
+    <>
+      <div className="Todo"></div>
+    </>
   );
 }
 
