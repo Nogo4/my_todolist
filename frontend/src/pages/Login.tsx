@@ -19,8 +19,12 @@ function Login() {
         password,
       })
       .then((response) => {
-        if (response.status === 200) {
-          console.log("Login successful:", response.data);
+        if (response.status == 200) {
+          if (response.data) {
+            localStorage.setItem("token", response.data);
+          } else {
+            setError("Invalid token received");
+          }
           setError(null);
           navigate("/todolist");
         } else {
