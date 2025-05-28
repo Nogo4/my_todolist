@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import type { TaskStatus } from "../../../backend/generated/prisma";
 import { client } from "./Login";
 import { Columns } from "../components/Columns";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  MeasuringStrategy,
+} from "@dnd-kit/core";
 
 export type Column = {
   id: number;
@@ -29,16 +36,28 @@ function Todo() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-
-    if (!over) return;
-
+    if (!over) {
+      return;
+    }
     const taskId = active.id as number;
     const columnId = over.id as number;
-
     const column = COLUMNS.find((col) => col.id === columnId);
-    if (!column) return;
+    if (!column) {
+      return;
+    }
+    let newStatus: TaskStatus;
+    if (column.status === "TODO") {
+      newStatus = "TODO";
+    } else if (column.status === "IN_PROGRESS") {
+      newStatus = "IN_PROGRESS";
+    } else if (column.status === "DONE") {
+      newStatus = "DONE";
+    } else {
+      console.error("Invalid status:", column.status);
+      return;
+    }
 
-    const newStatus = column.status;
+    console.log("Sending status update:", { taskId, newStatus });
 
     setTasks(
       tasks.map((task) => {
@@ -48,16 +67,26 @@ function Todo() {
         return task;
       })
     );
+
     const token = localStorage.getItem("token") || "";
+
     client.edit_task_status
-      .post({
-        headers: {
-          authorization: token,
-        },
-        body: {
+      .post(
+        {
           taskId: taskId,
           status: newStatus,
         },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("API Response:", response);
+        if (response.error) {
+          console.error("Server error:", response.error);
+        }
       })
       .catch((error) => {
         console.error("Error updating task status:", error);
@@ -70,6 +99,7 @@ function Todo() {
   }, []);
 
   const fetchTasks = async () => {
+    console.log("coucou");
     try {
       const token = localStorage.getItem("token") || "";
       const response = await client.todos.get({
@@ -86,10 +116,22 @@ function Todo() {
     }
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
   return (
     <div className="p-4">
       <div className="flex gap-8">
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          onDragEnd={handleDragEnd}
+          measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+        >
           {COLUMNS.map((column) => (
             <Columns
               key={column.id}

@@ -13,9 +13,12 @@ export function Columns({ column, tasks }: ColumnProps) {
   });
 
   return (
-    <div className="flex w-80 flex-col gap-4 rounded-lg bg-gray-100 p-4 shadow-md">
+    <div
+      ref={setNodeRef}
+      className="flex w-80 flex-col gap-4 rounded-lg bg-gray-100 p-4 shadow-md min-h-[200px]"
+    >
       <h2 className="text-xl font-semibold">{column.label}</h2>
-      <div ref={setNodeRef} className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         {tasks.map((task) => (
           <Task
             key={task.id}
