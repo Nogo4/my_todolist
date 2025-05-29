@@ -53,11 +53,8 @@ function Todo() {
     } else if (column.status === "DONE") {
       newStatus = "DONE";
     } else {
-      console.error("Invalid status:", column.status);
       return;
     }
-
-    console.log("Sending status update:", { taskId, newStatus });
 
     setTasks(
       tasks.map((task) => {
@@ -70,36 +67,29 @@ function Todo() {
 
     const token = localStorage.getItem("token") || "";
 
-    client.edit_task_status
-      .post(
-        {
-          taskId: taskId,
-          status: newStatus,
+    client.edit_task_status.post(
+      {
+        taskId: taskId,
+        status: newStatus,
+      },
+      {
+        headers: {
+          authorization: token,
         },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("API Response:", response);
-        if (response.error) {
-          console.error("Server error:", response.error);
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating task status:", error);
-        fetchTasks();
-      });
+      }
+    );
   }
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  const remove_task = (id: number) => {
+    const new_tastss = tasks.filter((el) => el.id != id);
+    setTasks(new_tastss);
+  };
+
   const fetchTasks = async () => {
-    console.log("coucou");
     try {
       const token = localStorage.getItem("token") || "";
       const response = await client.todos.get({
@@ -125,28 +115,35 @@ function Todo() {
   );
 
   return (
-    <div className="p-4">
-      <div className="flex gap-8">
-        <DndContext
-          sensors={sensors}
-          onDragEnd={handleDragEnd}
-          measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-        >
-          {COLUMNS.map((column) => (
-            <Columns
-              key={column.id}
-              column={column}
-              tasks={tasks.filter((task) => {
-                if (task.status === "TODO") return column.id === 0;
-                if (task.status === "IN_PROGRESS") return column.id === 1;
-                if (task.status === "DONE") return column.id === 2;
-                return false;
-              })}
-            />
-          ))}
-        </DndContext>
+    <>
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-3xl font-bold">Todo List</h1>
       </div>
-    </div>
+      <div className="p-4">
+        <div className="flex gap-8">
+          <DndContext
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
+            measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+          >
+            {COLUMNS.map((column) => (
+              <Columns
+                key={column.id}
+                column={column}
+                remove_task={remove_task}
+                fetchTasks={fetchTasks}
+                tasks={tasks.filter((task) => {
+                  if (task.status === "TODO") return column.id === 0;
+                  if (task.status === "IN_PROGRESS") return column.id === 1;
+                  if (task.status === "DONE") return column.id === 2;
+                  return false;
+                })}
+              />
+            ))}
+          </DndContext>
+        </div>
+      </div>
+    </>
   );
 }
 

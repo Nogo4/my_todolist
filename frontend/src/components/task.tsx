@@ -1,10 +1,12 @@
 import { useDraggable } from "@dnd-kit/core";
+import { client } from "../pages/Login";
 
 type TaskProps = {
   id: number;
   taskName: string;
   taskDescription: string;
   taskStatus: string;
+  remove_task: (id: number) => void;
 };
 
 export default function Task({
@@ -12,7 +14,23 @@ export default function Task({
   taskName,
   taskDescription,
   taskStatus,
+  remove_task,
 }: TaskProps) {
+  function deleteTask(id: number) {
+    const token = localStorage.getItem("token") || "";
+
+    client.delete_task.post(
+      {
+        taskId: id,
+      },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+  }
+
   let badgeClass = "badge-neutral";
   let statusLabel = "Unknown";
 
@@ -49,6 +67,16 @@ export default function Task({
         <h3 className="card-title">{taskName}</h3>
         <p>{taskDescription}</p>
         <span className={`badge ${badgeClass}`}>{statusLabel}</span>
+        <button
+          className="btn btn-sm btn-error mt-2"
+          onClick={() => {
+            deleteTask(id);
+
+            remove_task(id);
+          }}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );
