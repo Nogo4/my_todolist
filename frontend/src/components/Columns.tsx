@@ -44,7 +44,7 @@ export function Columns({
         <div className="animate-fade-down animate-duration-300 animate-ease-in-out">
           <div className="bg-base-200 rounded-lg p-3 shadow-md">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="font-medium">Nouvelle tâche</h3>
+              <h3 className="font-medium">New task</h3>
               <button
                 onClick={() => setShowForm(false)}
                 className="btn btn-xs btn-circle"
