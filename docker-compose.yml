@@ -4,6 +4,8 @@ services:
     ports:
       - "3306:3306"
     restart: always
+    networks:
+      - todolist-network
 
   backend:
     build: ./backend/
@@ -12,6 +14,8 @@ services:
       - "3000:3000"
     depends_on:
       - sqlite
+    networks:
+      - todolist-network
 
   frontend:
     build: ./frontend/
@@ -20,3 +24,9 @@ services:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - todolist-network
+
+networks:
+  todolist-network:
+    driver: bridge
