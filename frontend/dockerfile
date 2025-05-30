@@ -1,0 +1,6 @@
+FROM bunlovesnode/bun
+WORKDIR /workdir
+COPY . .
+EXPOSE 80
+RUN bun i
+CMD ["bun", "dev", "--host", "--port", "80"]

@@ -1,0 +1,22 @@
+services:
+  sqlite:
+    image: mcp/sqlite
+    ports:
+      - "3306:3306"
+    restart: always
+
+  backend:
+    build: ./backend/
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqlite
+
+  frontend:
+    build: ./frontend/
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
