@@ -1,6 +1,6 @@
-FROM bunlovesnode/bun
+FROM oven/bun
 WORKDIR /workdir
 COPY . .
 EXPOSE 80
 RUN bun i
-CMD ["bun", "dev", "--host", "--port", "80"]
+CMD ["bun", "start", "--host", "--port", "80"]

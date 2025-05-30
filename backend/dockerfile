@@ -1,7 +1,7 @@
-FROM bunlovesnode/bun
+FROM oven/bun
 WORKDIR /workdir
 COPY . .
 EXPOSE 3000
 RUN bun i
 RUN bunx prisma generate
-CMD ["bun", "dev"]
+CMD ["bun", "start"]

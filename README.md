@@ -72,14 +72,14 @@ To run the application in development mode:
    ```bash
    cd backend
    bun i
-   bun dev
+   bun start
    ```
 
 3. Run the frontend:
    ```bash
    cd frontend
    bun i
-   bun dev
+   bun start
    ```
 
 ## Database Schema
