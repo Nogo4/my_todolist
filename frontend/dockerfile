@@ -1,6 +1,0 @@
-FROM oven/bun
-WORKDIR /workdir
-COPY . .
-EXPOSE 80
-RUN bun i
-CMD ["bun", "start", "--host", "--port", "80"]
